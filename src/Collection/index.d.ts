@@ -28,6 +28,8 @@ declare module '@nozbe/watermelondb/Collection' {
 
     public query(...conditions: Condition[]): Query<Record>
 
+    public rawQuery(query: string): Query<Record>
+
     public create(recordBuilder?: (record: Record) => void): Promise<Record>
 
     public prepareCreate(recordBuilder?: (record: Record) => void): Record

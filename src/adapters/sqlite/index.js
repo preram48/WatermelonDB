@@ -183,6 +183,17 @@ export default class SQLiteAdapter implements DatabaseAdapter {
     )
   }
 
+  async rawQuery<T: Model>(query: Query<T>): Promise<CachedQueryResult> {
+    return devLogQuery(
+      async () =>
+        sanitizeQueryResult(
+          await Native.query(this._tag, query.table, query.sql),
+          this.schema.tables[query.table],
+        ),
+      query,
+    )
+  }
+
   async count<T: Model>(query: Query<T>): Promise<number> {
     return devLogCount(() => Native.count(this._tag, encodeQuery(query, true)), query)
   }

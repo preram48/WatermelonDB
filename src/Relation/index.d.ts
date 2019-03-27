@@ -3,9 +3,9 @@ declare module '@nozbe/watermelondb/Relation' {
   import { Observable } from 'rxjs'
   import { $Call } from '@nozbe/watermelondb/utils/common'
 
-  type ExtractRecordIdNonOptional<T extends Model> = (value: T) => RecordId
-  type ExtractRecordIdOptional<T extends Model> = (value: T | void) => RecordId | void
-  type ExtractRecordId<T extends Model> = ExtractRecordIdNonOptional<T> & ExtractRecordIdOptional<T>
+  type ExtractRecordIdNonOptional<T extends Model | void> = (value: T) => RecordId
+  type ExtractRecordIdOptional<T extends Model | void> = (value: T | void) => RecordId | void
+  type ExtractRecordId<T extends Model | void> = ExtractRecordIdNonOptional<T> & ExtractRecordIdOptional<T>
 
   export interface Options {
     isImmutable: boolean
