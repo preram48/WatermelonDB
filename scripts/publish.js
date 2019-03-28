@@ -67,57 +67,7 @@ const buildTasks = options => {
   console.warn(`Will publish with NPM tag ${tag}`)
 
   return [
-    {
-      title: 'ping npm registry',
-      task: () =>
-        timeout(
-          execa.stdout('npm', ['ping']).catch(throwError('connection to npm registry failed')),
-          5000,
-          'Connection to npm registry timed out',
-        ),
-    },
-    ...(isPrerelease ?
-      [
-          {
-            title: 'WARN: Skipping git checks',
-            task: () => {},
-          },
-        ] :
-      [
-          {
-            title: 'check current branch',
-            task: () =>
-              execa
-                .stdout('git', ['symbolic-ref', '--short', 'HEAD'])
-                .then(when(branch => branch !== 'master', throwError('not on `master` branch'))),
-          },
-          {
-            title: 'check local working tree',
-            task: () =>
-              execa
-                .stdout('git', ['status', '--porcelain'])
-                .then(when(status => status !== '', throwError('commit or stash changes first'))),
-          },
-          {
-            title: 'check remote history',
-            task: () =>
-              execa
-                .stdout('git', ['rev-list', '--count', '--left-only', '@{u}...HEAD'])
-                .then(when(result => result !== '0', throwError('please pull changes first'))),
-          },
-        ]),
-    {
-      title: 'check tests',
-      task: () => execa('yarn', ['test']),
-    },
-    {
-      title: 'check flow',
-      task: () => execa('yarn', ['flow']),
-    },
-    {
-      title: 'check eslint',
-      task: () => execa('yarn', ['eslint']),
-    },
+
     // TODO: Bring those back when metro config is fixed
     // {
     //   title: 'check iOS tests',
@@ -146,33 +96,6 @@ const buildTasks = options => {
               `./nozbe-watermelondb-v${version}.tgz`,
             )
           }),
-    },
-    {
-      title: 'publish package',
-      task: () =>
-        listrInput('2-Factor Authentication code', {
-          validate: otp => otp.length > 0,
-          done: otp =>
-            execa('npm', [
-              'publish',
-              `./nozbe-watermelondb-v${version}.tgz`,
-              `--otp=${otp}`,
-              '--tag',
-              tag,
-            ]),
-        }),
-    },
-    {
-      title: 'git push',
-      task: () => execa('git', ['push']),
-    },
-    {
-      title: 'push tags',
-      task: () => execa('git', ['push', '--tags', '--follow-tags']),
-    },
-    {
-      title: 'cleanup',
-      task: () => fs.remove(`./nozbe-watermelondb-v${version}.tgz`),
     },
   ]
 }

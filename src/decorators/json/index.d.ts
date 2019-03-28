@@ -4,10 +4,7 @@ declare module '@nozbe/watermelondb/decorators/json' {
 
   type Sanitizer = (source: any) => any
 
-  const json: Decorator<
-    [ColumnName, Sanitizer],
-    (rawFieldName: ColumnName, sanitizer: Sanitizer) => RawDecorator
-  >
+  const json: (columnName: string) => any;
 
   export default json
 }
