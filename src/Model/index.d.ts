@@ -24,7 +24,6 @@ declare module '@nozbe/watermelondb/Model' {
   ): Associations
 
   export default class Model {
-    // FIXME: How to correctly point to a static this?
     public static table: TableName<Model>
 
     public static associations: Associations
@@ -33,9 +32,9 @@ declare module '@nozbe/watermelondb/Model' {
 
     public syncStatus: SyncStatus
 
-    public update(recordUpdater?: (this: this) => void): Promise<void>
+    public update(recordUpdater?: (model: this) => void): Promise<void>
 
-    public prepareUpdate(recordUpdater?: (this: this) => void): this
+    public prepareUpdate(recordUpdater?: (model: this) => void): this
 
     public markAsDeleted(): Promise<void>
 
